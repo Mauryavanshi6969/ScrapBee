@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Us</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .stars {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .star {
+            cursor: pointer;
+            font-size: 24px;
+            color: #ccc;
+            transition: color 0.2s;
+            margin: 0 5px;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffcc00;
+        }
+
+        #commentForm {
+            display: none;
+            background: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #commentForm textarea,
+        #commentForm input {
+            width: 80%;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            color: #5c5c5c;
+            border: 1px solid black;
+        }
+
+        button.primary {
+            background-color: #b4afaf;
+        }
+
+        button.cancel {
+            background-color: #ccc;
+            margin-left: 10px;
+        }
+
+        #commentsSection {
+            margin-top: 20px;
+        }
+
+        .comment {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .comment-user {
+            color: #333;
+        }
+
+        #submitCommentBtn {
+            display: none;
+        }
+
+        #averageSection {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #averageRating {
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>⭐Rate Us⭐</h1>
+    </header>
+
+    <main>
+        <div class="stars" onclick="toggleCommentForm()">
+            <span class="star" data-rating="1" onclick="setRating(1)">★</span>
+            <span class="star" data-rating="2" onclick="setRating(2)">★</span>
+            <span class="star" data-rating="3" onclick="setRating(3)">★</span>
+            <span class="star" data-rating="4" onclick="setRating(4)">★</span>
+            <span class="star" data-rating="5" onclick="setRating(5)">★</span>
+        </div>
+
+        <div id="commentForm">
+            <input type="text" id="username" placeholder="Your Name">
+            <textarea id="comment" placeholder="Leave a comment..."></textarea>
+            <br>
+            <button class="primary" onclick="submitComment()">Submit Comment</button>
+            <button class="cancel" onclick="toggleCommentForm()">Cancel</button>
+        </div>
+
+        <button id="submitCommentBtn" class="primary" onclick="toggleCommentForm()">Leave a Comment</button>
+
+        <div id="commentsSection">  
+            <h2>Comments</h2>
+            <div id="comments"></div>
+        </div>
+
+        <div id="averageSection">
+            <h2>Average Rating</h2>
+            <div id="averageRating">0.0</div>
+        </div>
+    </main>
+
+    <script>
+        let selectedRating = 0;
+        let comments = [];
+
+        // Load comments from localStorage on page load
+        window.onload = function () {
+            const storedComments = localStorage.getItem('data/comment');
+            if (storedComments) {
+                comments = JSON.parse(storedComments);
+                displayComments();
+                updateAverageRating();
+            }
+        };
+
+        function setRating(rating) {
+            selectedRating = rating;
+            highlightStars(rating);
+        }
+
+        function highlightStars(count) {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                star.classList.toggle('active', index < count);
+            });
+        }
+
+        function toggleCommentForm() {
+            const commentForm = document.getElementById('commentForm');
+            const submitCommentBtn = document.getElementById('submitCommentBtn');
+            const usernameInput = document.getElementById('username');
+            const commentInput = document.getElementById('comment');
+
+            if (commentForm.style.display === 'none') {
+                // Show the form
+                commentForm.style.display = 'flex';
+                submitCommentBtn.style.display = 'none'; // Hide the "Leave a Comment" button
+            } else {
+                // Hide the form and show the "Leave a Comment" button
+                commentForm.style.display = 'none';
+                submitCommentBtn.style.display = 'block';
+                // Clear input values
+                usernameInput.value = '';
+                commentInput.value = '';
+            }
+        }
+
+        function submitComment() {
+            const username = document.getElementById('username').value;
+            const commentText = document.getElementById('comment').value;
+
+            if (selectedRating > 0 && username.trim() !== '' && commentText.trim() !== '') {
+                const comment = {
+                    rating: selectedRating,
+                    username: username,
+                    text: commentText
+                };
+                comments.push(comment);
+
+                // Save comments to localStorage
+                localStorage.setItem('data/comment', JSON.stringify(comments));
+
+                displayComments();
+                updateAverageRating();
+                toggleCommentForm();
+            } else {
+                alert('Please fill in all fields: Rating, Name, and Comment.');
+            }
+        }
+
+        function displayComments() {
+            const commentsContainer = document.getElementById('comments');
+            commentsContainer.innerHTML = '';
+
+            comments.forEach((comment, index) => {
+                const commentElement = document.createElement('div');
+                commentElement.classList.add('comment');
+                commentElement.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-user">${comment.username}</span>
+                        <span>Rating: ${comment.rating}</span>
+                        <button onclick="deleteComment(${index})">Delete</button>
+                    </div>
+                    <p>${comment.text}</p>
+                `;
+                commentsContainer.appendChild(commentElement);
+            });
+        }
+
+        function deleteComment(index) {
+            comments.splice(index, 1);
+
+            // Save updated comments to localStorage
+            localStorage.setItem('data/comment', JSON.stringify(comments));
+
+            displayComments();
+            updateAverageRating();
+        }
+
+        function updateAverageRating() {
+            const averageSection = document.getElementById('averageRating');
+            const totalRating = comments.reduce((sum, comment) => sum + comment.rating, 0);
+            const average = totalRating / comments.length || 0; // Avoid division by zero
+            averageSection.textContent = average.toFixed(1);
+        }
+    </script>
+
+</body>
+</html>

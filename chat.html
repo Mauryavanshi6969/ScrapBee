@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /* Your existing CSS styles here */
+
+        /* Chat styles */
+        #chat-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow-y: auto;
+            height: 400px;
+            margin-top: 50px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #message-input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        #send-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        #chat-output {
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        .user,
+        .ai {
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            clear: both;
+            word-wrap: break-word;
+        }
+
+        .user {
+            background-color: #e2f7fb;
+            float: left;
+        }
+
+        .ai {
+            background-color: #d4e3fc;
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chat-container">
+        <div id="chat-output"></div>
+        <input type="text" id="message-input" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+        <button id="send-btn" onclick="sendMessage()">Send</button>
+    </div>
+
+    <script src="js/chat.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1em;
+}
+/* Add some styling for the form elements */
+#settings-panel form {
+    display: flex;
+    flex-direction: column;
+}
+
+#settings-panel label {
+    margin-top: 10px;
+}
+
+#settings-panel input,
+#settings-panel textarea {
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+#settings-panel button {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    border: none;
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+#settings-panel {
+    position: fixed;
+    top: 0;
+    right: -300px; /* initially hidden */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    height: 100%;
+    transition: right 0.3s ease-in-out;
+}
